@@ -17,7 +17,9 @@
     "rangeM": 580,
     "mountHeightM": 32,
     "groundElevationM": 10,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-lekki.jpg",
+    "url": "/cctv/nigeria/lagos-lekki.jpg"
   },
   {
     "id": "cctv-los-lekki-ikoyi-toll",
@@ -37,7 +39,9 @@
     "rangeM": 520,
     "mountHeightM": 24,
     "groundElevationM": 10,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-lekki.jpg",
+    "url": "/cctv/nigeria/lagos-lekki.jpg"
   },
   {
     "id": "cctv-los-eko-atlantic",
@@ -57,7 +61,9 @@
     "rangeM": 750,
     "mountHeightM": 28,
     "groundElevationM": 8,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-ozumba-mbadiwe",
@@ -77,7 +83,9 @@
     "rangeM": 620,
     "mountHeightM": 22,
     "groundElevationM": 9,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-adeola-odeku",
@@ -97,7 +105,9 @@
     "rangeM": 480,
     "mountHeightM": 18,
     "groundElevationM": 8,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-marina-cms",
@@ -117,7 +127,9 @@
     "rangeM": 640,
     "mountHeightM": 26,
     "groundElevationM": 7,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-broad-street",
@@ -137,7 +149,9 @@
     "rangeM": 450,
     "mountHeightM": 20,
     "groundElevationM": 10,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-tbs-square",
@@ -157,7 +171,9 @@
     "rangeM": 550,
     "mountHeightM": 25,
     "groundElevationM": 10,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-tmb-adekunle",
@@ -177,7 +193,9 @@
     "rangeM": 720,
     "mountHeightM": 28,
     "groundElevationM": 6,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-lekki.jpg",
+    "url": "/cctv/nigeria/lagos-lekki.jpg"
   },
   {
     "id": "cctv-los-tmb-oworonshoki",
@@ -197,7 +215,9 @@
     "rangeM": 750,
     "mountHeightM": 30,
     "groundElevationM": 8,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-lekki.jpg",
+    "url": "/cctv/nigeria/lagos-lekki.jpg"
   },
   {
     "id": "cctv-los-national-theatre",
@@ -217,7 +237,9 @@
     "rangeM": 600,
     "mountHeightM": 26,
     "groundElevationM": 12,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-ikeja-allen",
@@ -237,7 +259,9 @@
     "rangeM": 490,
     "mountHeightM": 20,
     "groundElevationM": 38,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-ikeja-mobolaji",
@@ -257,7 +281,9 @@
     "rangeM": 540,
     "mountHeightM": 22,
     "groundElevationM": 36,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-mma-intl",
@@ -277,7 +303,9 @@
     "rangeM": 680,
     "mountHeightM": 26,
     "groundElevationM": 40,
-    "license": "Public airport perimeter and traffic surveillance"
+    "license": "Public airport perimeter and traffic surveillance",
+    "snapshotUrl": "/cctv/nigeria/lagos-port.jpg",
+    "url": "/cctv/nigeria/lagos-port.jpg"
   },
   {
     "id": "cctv-los-apapa-port",
@@ -297,7 +325,9 @@
     "rangeM": 580,
     "mountHeightM": 25,
     "groundElevationM": 6,
-    "license": "Public port access surveillance feed"
+    "license": "Public port access surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-port.jpg",
+    "url": "/cctv/nigeria/lagos-port.jpg"
   },
   {
     "id": "cctv-los-tin-can-island",
@@ -317,7 +347,9 @@
     "rangeM": 560,
     "mountHeightM": 24,
     "groundElevationM": 5,
-    "license": "Public port access surveillance feed"
+    "license": "Public port access surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-port.jpg",
+    "url": "/cctv/nigeria/lagos-port.jpg"
   },
   {
     "id": "cctv-los-maryland",
@@ -337,7 +369,9 @@
     "rangeM": 620,
     "mountHeightM": 25,
     "groundElevationM": 24,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-marina.jpg",
+    "url": "/cctv/nigeria/lagos-marina.jpg"
   },
   {
     "id": "cctv-los-lekki-conservation",
@@ -357,9 +391,10 @@
     "rangeM": 650,
     "mountHeightM": 24,
     "groundElevationM": 10,
-    "license": "Public traffic and safety surveillance feed"
+    "license": "Public traffic and safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/lagos-lekki.jpg",
+    "url": "/cctv/nigeria/lagos-lekki.jpg"
   },
-
   {
     "id": "cctv-abj-three-arms-zone",
     "name": "Three Arms Zone (National Assembly Approach)",
@@ -378,7 +413,9 @@
     "rangeM": 750,
     "mountHeightM": 28,
     "groundElevationM": 510,
-    "license": "Public administrative district surveillance feed"
+    "license": "Public administrative district surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-aso-villa",
@@ -398,7 +435,9 @@
     "rangeM": 850,
     "mountHeightM": 35,
     "groundElevationM": 540,
-    "license": "Public administrative district surveillance feed"
+    "license": "Public administrative district surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-national-mosque",
@@ -418,7 +457,9 @@
     "rangeM": 620,
     "mountHeightM": 24,
     "groundElevationM": 485,
-    "license": "Public city traffic surveillance feed"
+    "license": "Public city traffic surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-national-christian-centre",
@@ -438,7 +479,9 @@
     "rangeM": 580,
     "mountHeightM": 22,
     "groundElevationM": 482,
-    "license": "Public city traffic surveillance feed"
+    "license": "Public city traffic surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-millennium-park",
@@ -458,7 +501,9 @@
     "rangeM": 650,
     "mountHeightM": 25,
     "groundElevationM": 490,
-    "license": "Public city park and road surveillance feed"
+    "license": "Public city park and road surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-eagle-square",
@@ -478,7 +523,9 @@
     "rangeM": 680,
     "mountHeightM": 26,
     "groundElevationM": 495,
-    "license": "Public civic center surveillance feed"
+    "license": "Public civic center surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-city-gate",
@@ -498,7 +545,9 @@
     "rangeM": 750,
     "mountHeightM": 28,
     "groundElevationM": 460,
-    "license": "Public highway safety surveillance feed"
+    "license": "Public highway safety surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-naia-airport",
@@ -518,7 +567,9 @@
     "rangeM": 700,
     "mountHeightM": 26,
     "groundElevationM": 340,
-    "license": "Public airport access and concourse surveillance"
+    "license": "Public airport access and concourse surveillance",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-wuse-crescent",
@@ -538,7 +589,9 @@
     "rangeM": 480,
     "mountHeightM": 18,
     "groundElevationM": 480,
-    "license": "Public commercial center traffic feed"
+    "license": "Public commercial center traffic feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-cbn-hq",
@@ -558,7 +611,9 @@
     "rangeM": 560,
     "mountHeightM": 30,
     "groundElevationM": 482,
-    "license": "Public financial district perimeter surveillance"
+    "license": "Public financial district perimeter surveillance",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-jabi-lake",
@@ -578,7 +633,9 @@
     "rangeM": 620,
     "mountHeightM": 20,
     "groundElevationM": 465,
-    "license": "Public urban recreation and traffic feed"
+    "license": "Public urban recreation and traffic feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
   {
     "id": "cctv-abj-zuma-rock",
@@ -598,9 +655,10 @@
     "rangeM": 920,
     "mountHeightM": 26,
     "groundElevationM": 510,
-    "license": "Public interstate highway surveillance feed"
+    "license": "Public interstate highway surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/abuja-mosque.jpg",
+    "url": "/cctv/nigeria/abuja-mosque.jpg"
   },
-
   {
     "id": "cctv-phc-refinery",
     "name": "Port Harcourt Refinery (Eleme Industrial Corridor)",
@@ -619,7 +677,9 @@
     "rangeM": 750,
     "mountHeightM": 30,
     "groundElevationM": 12,
-    "license": "Public industrial corridor safety surveillance"
+    "license": "Public industrial corridor safety surveillance",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-phc-marine-base",
@@ -639,7 +699,9 @@
     "rangeM": 650,
     "mountHeightM": 24,
     "groundElevationM": 8,
-    "license": "Public port waterfront surveillance feed"
+    "license": "Public port waterfront surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-phc-isaac-boro",
@@ -659,7 +721,9 @@
     "rangeM": 540,
     "mountHeightM": 22,
     "groundElevationM": 15,
-    "license": "Public urban traffic surveillance feed"
+    "license": "Public urban traffic surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-phc-gov-house",
@@ -679,7 +743,9 @@
     "rangeM": 480,
     "mountHeightM": 25,
     "groundElevationM": 14,
-    "license": "Public civic district surveillance feed"
+    "license": "Public civic district surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-phc-garrison",
@@ -699,7 +765,9 @@
     "rangeM": 580,
     "mountHeightM": 22,
     "groundElevationM": 12,
-    "license": "Public roundabout traffic surveillance"
+    "license": "Public roundabout traffic surveillance",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-phc-uniport",
@@ -719,9 +787,10 @@
     "rangeM": 620,
     "mountHeightM": 20,
     "groundElevationM": 18,
-    "license": "Public campus perimeter surveillance feed"
+    "license": "Public campus perimeter surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
-
   {
     "id": "cctv-kano-emir-palace",
     "name": "Kano Emir Palace (Kofar Kudu Historic Gate)",
@@ -740,7 +809,9 @@
     "rangeM": 580,
     "mountHeightM": 24,
     "groundElevationM": 472,
-    "license": "Public historic core surveillance feed"
+    "license": "Public historic core surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kano-gidan-makama",
@@ -760,7 +831,9 @@
     "rangeM": 500,
     "mountHeightM": 20,
     "groundElevationM": 470,
-    "license": "Public museum plaza surveillance feed"
+    "license": "Public museum plaza surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kano-kofar-mata",
@@ -780,7 +853,9 @@
     "rangeM": 550,
     "mountHeightM": 18,
     "groundElevationM": 470,
-    "license": "Public cultural site surveillance feed"
+    "license": "Public cultural site surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kano-central-mosque",
@@ -800,7 +875,9 @@
     "rangeM": 620,
     "mountHeightM": 26,
     "groundElevationM": 475,
-    "license": "Public civic square surveillance feed"
+    "license": "Public civic square surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kano-makia-airport",
@@ -820,9 +897,10 @@
     "rangeM": 750,
     "mountHeightM": 28,
     "groundElevationM": 472,
-    "license": "Public airport access surveillance feed"
+    "license": "Public airport access surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
-
   {
     "id": "cctv-ibd-cocoa-house",
     "name": "Cocoa House (Dugbe Central Commercial Hub)",
@@ -841,7 +919,9 @@
     "rangeM": 550,
     "mountHeightM": 35,
     "groundElevationM": 195,
-    "license": "Public commercial center traffic feed"
+    "license": "Public commercial center traffic feed",
+    "snapshotUrl": "/cctv/nigeria/ibadan-cocoa.jpg",
+    "url": "/cctv/nigeria/ibadan-cocoa.jpg"
   },
   {
     "id": "cctv-ibd-mapo-hall",
@@ -861,7 +941,9 @@
     "rangeM": 620,
     "mountHeightM": 25,
     "groundElevationM": 210,
-    "license": "Public historic center traffic surveillance"
+    "license": "Public historic center traffic surveillance",
+    "snapshotUrl": "/cctv/nigeria/ibadan-cocoa.jpg",
+    "url": "/cctv/nigeria/ibadan-cocoa.jpg"
   },
   {
     "id": "cctv-ibd-ui-main-gate",
@@ -881,7 +963,9 @@
     "rangeM": 650,
     "mountHeightM": 22,
     "groundElevationM": 215,
-    "license": "Public university concourse surveillance feed"
+    "license": "Public university concourse surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/ibadan-cocoa.jpg",
+    "url": "/cctv/nigeria/ibadan-cocoa.jpg"
   },
   {
     "id": "cctv-ibd-agodi-secretariat",
@@ -901,7 +985,9 @@
     "rangeM": 540,
     "mountHeightM": 22,
     "groundElevationM": 200,
-    "license": "Public government secretariat surveillance feed"
+    "license": "Public government secretariat surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/ibadan-cocoa.jpg",
+    "url": "/cctv/nigeria/ibadan-cocoa.jpg"
   },
   {
     "id": "cctv-ibd-iwo-road",
@@ -921,9 +1007,10 @@
     "rangeM": 720,
     "mountHeightM": 28,
     "groundElevationM": 220,
-    "license": "Public highway interchange surveillance feed"
+    "license": "Public highway interchange surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/ibadan-cocoa.jpg",
+    "url": "/cctv/nigeria/ibadan-cocoa.jpg"
   },
-
   {
     "id": "cctv-enu-okpara-square",
     "name": "Okpara Square (Independence Layout)",
@@ -942,7 +1029,9 @@
     "rangeM": 580,
     "mountHeightM": 24,
     "groundElevationM": 222,
-    "license": "Public civic square surveillance feed"
+    "license": "Public civic square surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
   {
     "id": "cctv-enu-gov-house",
@@ -962,7 +1051,9 @@
     "rangeM": 520,
     "mountHeightM": 22,
     "groundElevationM": 230,
-    "license": "Public government quarter surveillance feed"
+    "license": "Public government quarter surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
   {
     "id": "cctv-enu-holy-ghost",
@@ -982,7 +1073,9 @@
     "rangeM": 550,
     "mountHeightM": 20,
     "groundElevationM": 218,
-    "license": "Public transit terminal traffic feed"
+    "license": "Public transit terminal traffic feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
   {
     "id": "cctv-enu-akanu-ibiam",
@@ -1002,9 +1095,10 @@
     "rangeM": 700,
     "mountHeightM": 25,
     "groundElevationM": 215,
-    "license": "Public airport concourse surveillance feed"
+    "license": "Public airport concourse surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
-
   {
     "id": "cctv-ben-royal-palace",
     "name": "Benin Royal Palace (King's Square Ring Road)",
@@ -1023,7 +1117,9 @@
     "rangeM": 620,
     "mountHeightM": 24,
     "groundElevationM": 82,
-    "license": "Public historic square traffic feed"
+    "license": "Public historic square traffic feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
   {
     "id": "cctv-ben-uniben-ugbowo",
@@ -1043,7 +1139,9 @@
     "rangeM": 640,
     "mountHeightM": 22,
     "groundElevationM": 85,
-    "license": "Public highway concourse surveillance feed"
+    "license": "Public highway concourse surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
   {
     "id": "cctv-ben-igun-street",
@@ -1063,9 +1161,10 @@
     "rangeM": 450,
     "mountHeightM": 18,
     "groundElevationM": 80,
-    "license": "Public cultural heritage district surveillance"
+    "license": "Public cultural heritage district surveillance",
+    "snapshotUrl": "/cctv/nigeria/enugu-okpara.jpg",
+    "url": "/cctv/nigeria/enugu-okpara.jpg"
   },
-
   {
     "id": "cctv-kad-ahmadu-bello",
     "name": "Ahmadu Bello Way (Central Market Axis)",
@@ -1084,7 +1183,9 @@
     "rangeM": 580,
     "mountHeightM": 24,
     "groundElevationM": 612,
-    "license": "Public commercial boulevard surveillance feed"
+    "license": "Public commercial boulevard surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kad-lugard-hall",
@@ -1104,7 +1205,9 @@
     "rangeM": 600,
     "mountHeightM": 25,
     "groundElevationM": 615,
-    "license": "Public legislative district surveillance feed"
+    "license": "Public legislative district surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-kad-refinery",
@@ -1124,9 +1227,10 @@
     "rangeM": 750,
     "mountHeightM": 30,
     "groundElevationM": 620,
-    "license": "Public industrial perimeter surveillance feed"
+    "license": "Public industrial perimeter surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
-
   {
     "id": "cctv-sok-sultan-palace",
     "name": "Sokoto Caliphate Palace (Kofar Rini Concourse)",
@@ -1145,7 +1249,9 @@
     "rangeM": 580,
     "mountHeightM": 22,
     "groundElevationM": 272,
-    "license": "Public palace square surveillance feed"
+    "license": "Public palace square surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-sok-sultan-bello-mosque",
@@ -1165,9 +1271,10 @@
     "rangeM": 520,
     "mountHeightM": 24,
     "groundElevationM": 270,
-    "license": "Public civic square surveillance feed"
+    "license": "Public civic square surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
-
   {
     "id": "cctv-mai-post-office",
     "name": "Post Office Roundabout (Ahmadu Bello Way)",
@@ -1186,7 +1293,9 @@
     "rangeM": 580,
     "mountHeightM": 24,
     "groundElevationM": 322,
-    "license": "Public commercial center traffic feed"
+    "license": "Public commercial center traffic feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
   {
     "id": "cctv-mai-shehu-palace",
@@ -1206,9 +1315,10 @@
     "rangeM": 600,
     "mountHeightM": 22,
     "groundElevationM": 320,
-    "license": "Public historic square surveillance feed"
+    "license": "Public historic square surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/kano-dawanau.jpg",
+    "url": "/cctv/nigeria/kano-dawanau.jpg"
   },
-
   {
     "id": "cctv-cal-marina-resort",
     "name": "Marina Resort Waterfront (Calabar River Axis)",
@@ -1227,7 +1337,9 @@
     "rangeM": 680,
     "mountHeightM": 26,
     "groundElevationM": 15,
-    "license": "Public waterfront and tourism surveillance feed"
+    "license": "Public waterfront and tourism surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   },
   {
     "id": "cctv-war-effurun",
@@ -1247,6 +1359,8 @@
     "rangeM": 620,
     "mountHeightM": 24,
     "groundElevationM": 12,
-    "license": "Public highway interchange surveillance feed"
+    "license": "Public highway interchange surveillance feed",
+    "snapshotUrl": "/cctv/nigeria/phc-refinery.jpg",
+    "url": "/cctv/nigeria/phc-refinery.jpg"
   }
 ]

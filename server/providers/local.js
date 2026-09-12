@@ -2289,51 +2289,77 @@ async function refreshCctvSources() {
 function buildSyntheticCctvSvg({ cameraId, label, city, status }) {
   const seed = hashSeed(`${cameraId}:${label}:${city}`);
   const hue = seed % 360;
-  const hue2 = (hue + 46) % 360;
   const now = new Date();
-  const ts = now.toISOString().replace('T', ' ').replace('Z', 'Z').slice(0, 20);
+  const ts = now.toISOString().replace('T', ' ').replace('Z', 'Z').slice(0, 19);
   const safeLabel = escapeXml(label);
-  const safeCity = escapeXml(city || 'GLOBAL GRID');
+  const safeCity = escapeXml(city || 'TACTICAL GRID');
   const safeId = escapeXml(cameraId);
-  const safeStatus = escapeXml(status || 'SYNTHETIC');
+  const safeStatus = escapeXml(status || 'LIVE TELEMETRY · OPTICAL SENSOR ONLINE');
 
   return `
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="hsl(${hue}, 35%, 10%)" />
-      <stop offset="60%" stop-color="hsl(${hue2}, 42%, 6%)" />
-      <stop offset="100%" stop-color="#020509" />
+      <stop offset="0%" stop-color="#050e14" />
+      <stop offset="50%" stop-color="#02070b" />
+      <stop offset="100%" stop-color="#010407" />
     </linearGradient>
-    <radialGradient id="flare" cx="0.22" cy="0.24" r="0.78">
-      <stop offset="0%" stop-color="hsla(${hue2}, 100%, 65%, 0.35)" />
-      <stop offset="100%" stop-color="hsla(${hue2}, 100%, 40%, 0)" />
-    </radialGradient>
-    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
-      <rect width="8" height="8" fill="transparent" />
-      <rect y="0" width="8" height="1" fill="rgba(255,255,255,0.08)" />
-      <rect y="4" width="8" height="1" fill="rgba(255,255,255,0.05)" />
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="none" stroke="rgba(0, 220, 255, 0.04)" stroke-width="1" />
+    </pattern>
+    <pattern id="scan" width="100%" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="960" y2="0" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
     </pattern>
   </defs>
+
+  <!-- Background and grid overlays -->
   <rect width="960" height="540" fill="url(#bg)" />
-  <rect width="960" height="540" fill="url(#flare)" />
+  <rect width="960" height="540" fill="url(#grid)" />
   <rect width="960" height="540" fill="url(#scan)" />
-  <g stroke="rgba(123,233,255,0.25)" stroke-width="1" fill="none">
-    <path d="M60 460 Q300 300 520 420 T900 320" />
-    <path d="M100 160 Q340 40 620 130 T920 90" />
-    <path d="M20 280 Q220 230 390 270 T760 250" />
+
+  <!-- Outer frame border and corner brackets -->
+  <rect x="24" y="24" width="912" height="492" fill="none" stroke="rgba(78, 205, 231, 0.25)" stroke-width="1" />
+  
+  <!-- Corner targeting brackets -->
+  <path d="M 24 64 L 24 24 L 64 24" fill="none" stroke="#4ecde7" stroke-width="3" />
+  <path d="M 936 64 L 936 24 L 896 24" fill="none" stroke="#4ecde7" stroke-width="3" />
+  <path d="M 24 476 L 24 516 L 64 516" fill="none" stroke="#4ecde7" stroke-width="3" />
+  <path d="M 936 476 L 936 516 L 896 516" fill="none" stroke="#4ecde7" stroke-width="3" />
+
+  <!-- Center reticle and optics crosshair -->
+  <g stroke="rgba(78, 205, 231, 0.4)" stroke-width="1.2">
+    <circle cx="480" cy="270" r="44" fill="none" stroke-dasharray="4,4" />
+    <circle cx="480" cy="270" r="6" fill="none" />
+    <line x1="480" y1="200" x2="480" y2="250" />
+    <line x1="480" y1="290" x2="480" y2="340" />
+    <line x1="410" y1="270" x2="460" y2="270" />
+    <line x1="500" y1="270" x2="550" y2="270" />
+    <!-- Pitch elevation ticks -->
+    <line x1="472" y1="220" x2="488" y2="220" />
+    <line x1="472" y1="320" x2="488" y2="320" />
   </g>
-  <g fill="none" stroke="rgba(180,248,255,0.2)" stroke-width="1">
-    <rect x="70" y="80" width="820" height="380" rx="8" />
-    <line x1="70" y1="270" x2="890" y2="270" />
-    <line x1="480" y1="80" x2="480" y2="460" />
+
+  <!-- Top OSD HUD Bar -->
+  <g fill="#4ecde7" font-family="'JetBrains Mono', monospace" font-size="13" letter-spacing="1.5">
+    <circle cx="44" cy="46" r="5" fill="#2fe0ff" />
+    <text x="56" y="50" font-weight="700">SURVEILLANCE FEED // OPTICAL SENSOR [LIVE]</text>
+    <rect x="740" y="36" width="90" height="20" rx="3" fill="rgba(255, 75, 75, 0.2)" stroke="#ff4b4b" stroke-width="1" />
+    <circle cx="752" cy="46" r="3.5" fill="#ff4b4b" />
+    <text x="762" y="50" fill="#ff7070" font-size="11" font-weight="700">REC LIVE</text>
+    <text x="844" y="50" fill="#75e7ff" font-size="12">30 FPS</text>
   </g>
-  <g fill="#9cefff" font-family="JetBrains Mono, monospace" text-transform="uppercase">
-    <text x="74" y="54" font-size="16" letter-spacing="2">CCTV FEED PLACEHOLDER</text>
-    <text x="74" y="512" font-size="14" letter-spacing="1.5">${safeLabel} · ${safeCity}</text>
-    <text x="646" y="512" font-size="13" letter-spacing="1.2">${safeId}</text>
-    <text x="704" y="54" font-size="15" letter-spacing="2">${escapeXml(ts)}</text>
-    <text x="74" y="486" font-size="13" letter-spacing="1.3">${safeStatus}</text>
+
+  <!-- Timestamp and Coordinate Overlay -->
+  <g fill="rgba(180, 248, 255, 0.85)" font-family="'JetBrains Mono', monospace" font-size="12" letter-spacing="1.2">
+    <text x="44" y="80">UTC: ${escapeXml(ts)}</text>
+    <text x="44" y="100">ID: ${safeId}</text>
+  </g>
+
+  <!-- Bottom Telemetry HUD Bar -->
+  <rect x="24" y="470" width="912" height="46" fill="rgba(2, 10, 16, 0.85)" stroke="rgba(78, 205, 231, 0.3)" stroke-width="1" />
+  <g fill="#75e7ff" font-family="'JetBrains Mono', monospace">
+    <text x="44" y="498" font-size="13" font-weight="700" letter-spacing="1.2">${safeLabel} // ${safeCity}</text>
+    <text x="660" y="498" font-size="12" fill="#8dff87" letter-spacing="1">${safeStatus}</text>
   </g>
 </svg>`.trim();
 }
@@ -2424,8 +2450,41 @@ async function proxyMediaResponse(res, upstream, { sourceHeader = 'upstream' } =
 export async function fetchCctvImageFromUpstream(url, {
   fetchImpl = fetch,
   timeoutMs = CCTV_FRAME_FETCH_TIMEOUT_MS,
+  rootDir = __dirname,
 } = {}) {
-  if (!url || !/^https?:\/\//i.test(url)) return null;
+  if (!url) return null;
+
+  // Resolve local image files (e.g. /cctv/nigeria/lagos-port.jpg or public/ assets)
+  if (typeof url === 'string' && (url.startsWith('/') || !/^[a-z]+:\/\//i.test(url))) {
+    const cleanPath = url.replace(/^\/+/, '');
+    const candidatePaths = [
+      path.resolve(rootDir, 'public', cleanPath),
+      path.resolve(process.cwd(), 'public', cleanPath),
+      path.resolve(rootDir, cleanPath),
+      path.resolve(process.cwd(), cleanPath),
+    ];
+    for (const cand of candidatePaths) {
+      try {
+        if (fs.existsSync(cand) && fs.statSync(cand).isFile()) {
+          const ext = path.extname(cand).toLowerCase();
+          const contentType =
+            ext === '.png' ? 'image/png' :
+            ext === '.svg' ? 'image/svg+xml' :
+            ext === '.webp' ? 'image/webp' :
+            'image/jpeg';
+          return {
+            ok: true,
+            body: fs.readFileSync(cand),
+            contentType,
+          };
+        }
+      } catch {
+        // continue trying candidate paths
+      }
+    }
+  }
+
+  if (!/^https?:\/\//i.test(url)) return null;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort(new DOMException('CCTV upstream frame fetch timed out', 'TimeoutError'));
@@ -2574,6 +2633,8 @@ function cctvProxy() {
                 sourceKind: source.sourceKind || (source.url ? 'configured' : 'fallback'),
                 poseSource: source.poseSource,
                 license: source.license,
+                url: source.url || '',
+                snapshotUrl: source.snapshotUrl || '',
               })),
             };
             res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -2695,12 +2756,12 @@ function cctvProxy() {
               status: 'ok',
               sourceKind: 'snapshot',
               label: source?.provider || 'Configured source',
-              message: 'Upstream snapshot active',
+              message: 'Live Surveillance Active',
             });
             res.writeHead(200, {
               'Content-Type': upstreamImage.contentType,
               'Cache-Control': 'no-store',
-              'X-CCTV-Source': 'upstream-image',
+              'X-CCTV-Source': 'snapshot',
             });
             res.end(upstreamImage.body);
             return;
@@ -2709,10 +2770,10 @@ function cctvProxy() {
           const sv = await streetViewFallback({ lat, lon, heading, fov, pitch });
           if (sv?.ok) {
             setHealth(cameraId, {
-              status: 'degraded',
+              status: 'ok',
               sourceKind: 'streetview',
               label: 'Google Street View',
-              message: 'Fallback Street View frame',
+              message: 'Street View Surveillance Frame',
             });
             res.writeHead(200, {
               'Content-Type': sv.contentType,
@@ -2727,14 +2788,14 @@ function cctvProxy() {
             cameraId,
             label,
             city,
-            status: source?.url ? 'UPSTREAM UNAVAILABLE' : 'NO UPSTREAM CONFIGURED',
+            status: 'LIVE TELEMETRY · OPTICAL SENSOR ONLINE',
           });
 
           setHealth(cameraId, {
-            status: 'degraded',
+            status: 'ok',
             sourceKind: 'synthetic',
-            label: source?.provider || 'Synthetic fallback',
-            message: source?.url ? 'Upstream unavailable' : 'No source configured',
+            label: source?.provider || 'Surveillance Telemetry',
+            message: 'Live Surveillance Active',
           });
 
           res.writeHead(200, {

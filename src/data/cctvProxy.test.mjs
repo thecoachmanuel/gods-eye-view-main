@@ -36,3 +36,11 @@ test('CCTV upstream frame fetch returns a valid image response', async () => {
   assert.equal(result?.contentType, 'image/jpeg');
   assert.deepEqual(result?.body, Buffer.from([1, 2, 3]));
 });
+
+test('CCTV upstream frame fetch resolves local relative surveillance asset', async () => {
+  const result = await fetchCctvImageFromUpstream('/cctv/nigeria/lagos-port.jpg');
+  assert.equal(result?.ok, true);
+  assert.equal(result?.contentType, 'image/jpeg');
+  assert.ok(result?.body?.length > 1000, 'must resolve valid local image buffer');
+});
+
