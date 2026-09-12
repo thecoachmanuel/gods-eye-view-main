@@ -1603,6 +1603,26 @@ function loadSourcesFromEnv() {
   }
 }
 
+/**
+ * Load curated Nigerian CCTV sources across Lagos, Abuja, Port Harcourt,
+ * Kano, Ibadan, Enugu, Benin City, Kaduna, Sokoto, Maiduguri, Calabar, and Warri.
+ *
+ * @returns {Array<object>} Array of raw source objects, or [] on error.
+ */
+function loadNigeriaSources() {
+  const filePath = path.resolve(__dirname, 'config/cctv_sources.nigeria.json');
+  try {
+    if (!fs.existsSync(filePath)) return [];
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn('[CCTV] failed to read Nigeria CCTV source file:', filePath, error?.message || error);
+    return [];
+  }
+}
+
+
 
 /**
  * Parse a WKT POINT string (e.g. "POINT(-97.74 30.27)") into lat/lon.
@@ -2196,6 +2216,7 @@ async function getCctvSources() {
 async function refreshCctvSources() {
   const fromFile = loadSourcesFromFile();
   const fromEnv = loadSourcesFromEnv();
+  const fromNigeria = loadNigeriaSources();
 
   const forceAustin = String(process.env.CCTV_FORCE_AUSTIN || '').trim() === '1';
   const preferAustin = String(process.env.CCTV_PREFER_AUSTIN || '1').trim() !== '0';
@@ -2218,8 +2239,8 @@ async function refreshCctvSources() {
     fromCaltrans = caltransResult.status === 'fulfilled' ? caltransResult.value : [];
     fromTfl = tflResult.status === 'fulfilled' ? tflResult.value : [];
   }
-  // Live sources first so file/env overrides win on duplicate IDs (Map last-write).
-  const merged = [...fromAustin, ...fromCaltrans, ...fromTfl, ...fromFile, ...fromEnv];
+  // Curated Nigeria sources first so they are always guaranteed slots in the catalog
+  const merged = [...fromNigeria, ...fromAustin, ...fromCaltrans, ...fromTfl, ...fromFile, ...fromEnv];
 
   // Deduplicate by camera ID (last-write wins because of Map.set)
   const byId = new Map();
