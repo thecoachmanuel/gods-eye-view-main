@@ -6407,6 +6407,120 @@ body.cockpit-mode #intel-hud .hud-right-edge { right: 22px; }
   opacity: 1;
 }
 
+/* Tactical live surveillance HUD layer */
+.cctv-frame-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 10px;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  z-index: 2;
+  font-family: var(--font-mono);
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.cctv-frame-wrap.has-frame .cctv-frame-hud {
+  opacity: 1;
+}
+
+.cctv-hud-top,
+.cctv-hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.cctv-hud-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #ff4a4a;
+}
+
+.cctv-hud-rec-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3333;
+  box-shadow: 0 0 8px #ff2222;
+  animation: cctv-rec-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes cctv-rec-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.85); }
+}
+
+.cctv-hud-clock {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: #aaeaff;
+}
+
+.cctv-hud-camera-id {
+  font-size: 7.5px;
+  letter-spacing: 1px;
+  color: #8dff87;
+  max-width: 65%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cctv-hud-telemetry {
+  font-size: 7.5px;
+  letter-spacing: 1px;
+  color: rgba(170, 234, 255, 0.75);
+}
+
+/* Corner reticles for authentic military reconnaissance framing */
+.cctv-hud-reticle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(0, 244, 255, 0.5);
+  border-style: solid;
+}
+
+.cctv-hud-reticle.top-left {
+  top: 6px;
+  left: 6px;
+  border-width: 1.5px 0 0 1.5px;
+}
+
+.cctv-hud-reticle.top-right {
+  top: 6px;
+  right: 6px;
+  border-width: 1.5px 1.5px 0 0;
+}
+
+.cctv-hud-reticle.bottom-left {
+  bottom: 6px;
+  left: 6px;
+  border-width: 0 0 1.5px 1.5px;
+}
+
+.cctv-hud-reticle.bottom-right {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 1.5px 1.5px 0;
+}
+
 #cctv-meta {
   font-family: var(--font-mono);
   font-size: 9px;

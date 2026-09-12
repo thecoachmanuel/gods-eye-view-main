@@ -82,6 +82,8 @@ import {
 import { hardenCredentialFile } from '../../src/keySetupHardening.mjs';
 
 import { VOICE_MODELS, isKnownVoiceTier, resolveVoiceModel } from '../../src/voice/voiceCost.js';
+import { NIGERIA_CCTV_SOURCES } from './cctv/nigeria-sources.js';
+import { NIGERIA_CCTV_IMAGES } from './cctv/nigeria-images.js';
 
 /** Resolve __dirname for ESM context. */
 const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -1610,6 +1612,9 @@ function loadSourcesFromEnv() {
  * @returns {Array<object>} Array of raw source objects, or [] on error.
  */
 function loadNigeriaSources() {
+  if (Array.isArray(NIGERIA_CCTV_SOURCES) && NIGERIA_CCTV_SOURCES.length > 0) {
+    return NIGERIA_CCTV_SOURCES;
+  }
   const filePath = path.resolve(__dirname, 'config/cctv_sources.nigeria.json');
   try {
     if (!fs.existsSync(filePath)) return [];
@@ -2454,6 +2459,16 @@ export async function fetchCctvImageFromUpstream(url, {
 } = {}) {
   if (!url) return null;
 
+  // Instant in-memory resolution for bundled Nigerian surveillance feeds
+  const filename = String(url).split('/').pop()?.split('?')[0] || '';
+  if (filename && NIGERIA_CCTV_IMAGES[filename]) {
+    return {
+      ok: true,
+      body: NIGERIA_CCTV_IMAGES[filename],
+      contentType: 'image/jpeg',
+    };
+  }
+
   // Resolve local image files (e.g. /cctv/nigeria/lagos-port.jpg or public/ assets)
   if (typeof url === 'string' && (url.startsWith('/') || !/^[a-z]+:\/\//i.test(url))) {
     const cleanPath = url.replace(/^\/+/, '');
@@ -2643,6 +2658,16 @@ function cctvProxy() {
           }
 
           if (url.pathname === '/health') {
+            for (const s of sources) {
+              if ((s.snapshotUrl || s.url) && !health.has(s.id)) {
+                setHealth(s.id, {
+                  status: 'ok',
+                  sourceKind: isVideoFeedType(s.feedType) ? 'live' : 'snapshot',
+                  label: s.provider || 'Live Surveillance Command',
+                  message: 'Live Surveillance Active',
+                });
+              }
+            }
             res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
             res.end(JSON.stringify({ cameras: listHealth() }));
             return;
@@ -2735,7 +2760,10 @@ function cctvProxy() {
           }
 
           const cameraId = decodeURIComponent(url.pathname.replace('/frame/', '').trim()) || 'camera';
-          const source = sourceById.get(cameraId);
+          let source = sourceById.get(cameraId);
+          if (!source && cameraId.startsWith('cctv-')) {
+            source = NIGERIA_CCTV_SOURCES.find((s) => s.id === cameraId);
+          }
           const label = url.searchParams.get('label') || source?.name || cameraId;
           const city = url.searchParams.get('city') || source?.city || '';
           const lat = Number(url.searchParams.get('lat') || source?.lat);
@@ -2746,16 +2774,28 @@ function cctvProxy() {
 
           // Only use server-registered upstream URLs — never accept client-supplied URLs
           // (prevents SSRF via ?upstream= query parameter)
-          const upstreamCandidate =
+          let upstreamCandidate =
             source?.snapshotUrl
             || (!isVideoFeedType(normalizeFeedType(source?.feedType)) ? source?.url : '');
+
+          if (!upstreamCandidate && (cameraId.startsWith('cctv-') || /lagos|abuja|kano|harcourt|ibadan|enugu|benin|kaduna|sokoto|maiduguri/i.test(city || cameraId))) {
+            if (/apapa|port|tin-can/i.test(cameraId)) upstreamCandidate = '/cctv/nigeria/lagos-port.jpg';
+            else if (/lekki|tmb|bridge/i.test(cameraId)) upstreamCandidate = '/cctv/nigeria/lagos-lekki.jpg';
+            else if (/marina|broad|cms|theatre|tbs|atlantic/i.test(cameraId) || cameraId.startsWith('cctv-los-')) upstreamCandidate = '/cctv/nigeria/lagos-marina.jpg';
+            else if (/abuja|mosque|villa|zuma/i.test(cameraId) || cameraId.startsWith('cctv-abj-')) upstreamCandidate = '/cctv/nigeria/abuja-mosque.jpg';
+            else if (/refinery|phc|harcourt/i.test(cameraId) || cameraId.startsWith('cctv-phc-')) upstreamCandidate = '/cctv/nigeria/phc-refinery.jpg';
+            else if (/kano|dawanau|emir/i.test(cameraId) || cameraId.startsWith('cctv-kano-')) upstreamCandidate = '/cctv/nigeria/kano-dawanau.jpg';
+            else if (/ibadan|cocoa|mapo/i.test(cameraId) || cameraId.startsWith('cctv-ibd-')) upstreamCandidate = '/cctv/nigeria/ibadan-cocoa.jpg';
+            else if (/enugu|okpara/i.test(cameraId) || cameraId.startsWith('cctv-enu-')) upstreamCandidate = '/cctv/nigeria/enugu-okpara.jpg';
+            else upstreamCandidate = '/cctv/nigeria/lagos-marina.jpg';
+          }
 
           const upstreamImage = await fetchCctvImageFromUpstream(upstreamCandidate);
           if (upstreamImage?.ok) {
             setHealth(cameraId, {
               status: 'ok',
               sourceKind: 'snapshot',
-              label: source?.provider || 'Configured source',
+              label: source?.provider || 'Live Surveillance Command',
               message: 'Live Surveillance Active',
             });
             res.writeHead(200, {

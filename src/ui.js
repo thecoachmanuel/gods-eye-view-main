@@ -6409,6 +6409,17 @@ export class StyleManager {
       this._resetCctvCalibration();
     });
 
+    this._cctvHudClock = document.getElementById('cctv-hud-clock');
+    this._cctvHudCameraId = document.getElementById('cctv-hud-camera-id');
+    const updateHudClock = () => {
+      if (!this._cctvHudClock) return;
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      this._cctvHudClock.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
+    };
+    updateHudClock();
+    setInterval(updateHudClock, 1000);
+
     this._renderCctvState(null);
     this._syncCctvPanelViewport();
   }
@@ -6817,6 +6828,14 @@ export class StyleManager {
           : `${cameras.length} cameras loaded · enable CCTV to activate`;
       } else {
         this._cctvMeta.textContent = 'Enable CCTV to load camera intersections';
+      }
+    }
+
+    if (this._cctvHudCameraId) {
+      if (activeCamera) {
+        this._cctvHudCameraId.textContent = `${activeCamera.city?.toUpperCase() || 'SURVEILLANCE'} · ${activeCamera.name?.toUpperCase() || activeCamera.id}`;
+      } else {
+        this._cctvHudCameraId.textContent = 'OPTICAL SENSOR ACTIVE';
       }
     }
 

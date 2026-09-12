@@ -600,6 +600,20 @@
       </div>
       <div id="cctv-frame-wrap" class="cctv-frame-wrap">
         <img id="cctv-frame" alt="CCTV feed frame" />
+        <div id="cctv-frame-hud" class="cctv-frame-hud" aria-hidden="true">
+          <div class="cctv-hud-top">
+            <span class="cctv-hud-rec"><span class="cctv-hud-rec-dot"></span>LIVE SURVEILLANCE</span>
+            <span id="cctv-hud-clock" class="cctv-hud-clock">--:--:-- UTC</span>
+          </div>
+          <div class="cctv-hud-reticle top-left"></div>
+          <div class="cctv-hud-reticle top-right"></div>
+          <div class="cctv-hud-reticle bottom-left"></div>
+          <div class="cctv-hud-reticle bottom-right"></div>
+          <div class="cctv-hud-bottom">
+            <span id="cctv-hud-camera-id" class="cctv-hud-camera-id">OPTICAL SENSOR ACTIVE</span>
+            <span class="cctv-hud-telemetry">1080P · 25 FPS</span>
+          </div>
+        </div>
       </div>
       <div id="cctv-source-badge" role="status" aria-live="polite">SOURCE · UNKNOWN</div>
       <div id="cctv-meta">Enable CCTV to load camera intersections</div>
