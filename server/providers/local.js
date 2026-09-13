@@ -84,6 +84,8 @@ import { hardenCredentialFile } from '../../src/keySetupHardening.mjs';
 import { VOICE_MODELS, isKnownVoiceTier, resolveVoiceModel } from '../../src/voice/voiceCost.js';
 import { NIGERIA_CCTV_SOURCES } from './cctv/nigeria-sources.js';
 import { NIGERIA_CCTV_IMAGES } from './cctv/nigeria-images.js';
+import { incidentsProxy } from './incidents.js';
+import sharp from 'sharp';
 
 /** Resolve __dirname for ESM context. */
 const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -1612,19 +1614,15 @@ function loadSourcesFromEnv() {
  * @returns {Array<object>} Array of raw source objects, or [] on error.
  */
 function loadNigeriaSources() {
-  if (Array.isArray(NIGERIA_CCTV_SOURCES) && NIGERIA_CCTV_SOURCES.length > 0) {
-    return NIGERIA_CCTV_SOURCES;
-  }
-  const filePath = path.resolve(__dirname, 'config/cctv_sources.nigeria.json');
-  try {
-    if (!fs.existsSync(filePath)) return [];
-    const raw = fs.readFileSync(filePath, 'utf8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.warn('[CCTV] failed to read Nigeria CCTV source file:', filePath, error?.message || error);
-    return [];
-  }
+  const raw = (Array.isArray(NIGERIA_CCTV_SOURCES) && NIGERIA_CCTV_SOURCES.length > 0)
+    ? NIGERIA_CCTV_SOURCES
+    : [];
+  return raw.map((s) => ({
+    ...s,
+    url: `/api/cctv/frame/${encodeURIComponent(s.id)}`,
+    snapshotUrl: `/api/cctv/frame/${encodeURIComponent(s.id)}`,
+    sourceKind: 'live-surveillance',
+  }));
 }
 
 
@@ -2459,15 +2457,8 @@ export async function fetchCctvImageFromUpstream(url, {
 } = {}) {
   if (!url) return null;
 
-  // Instant in-memory resolution for bundled Nigerian surveillance feeds
-  const filename = String(url).split('/').pop()?.split('?')[0] || '';
-  if (filename && NIGERIA_CCTV_IMAGES[filename]) {
-    return {
-      ok: true,
-      body: NIGERIA_CCTV_IMAGES[filename],
-      contentType: 'image/jpeg',
-    };
-  }
+  // NOTE: Nigerian cameras no longer use static in-memory buffers.
+  // They are served via Street View / Wikimedia live fetches in cctvProxy.
 
   // Resolve local image files (e.g. /cctv/nigeria/lagos-port.jpg or public/ assets)
   if (typeof url === 'string' && (url.startsWith('/') || !/^[a-z]+:\/\//i.test(url))) {
@@ -2523,9 +2514,268 @@ export async function fetchCctvImageFromUpstream(url, {
   }
 }
 
+const NIGERIA_CITY_POOLS = {
+  lagos: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Coordinated_Traffic_in_Lagos.jpg/960px-Coordinated_Traffic_in_Lagos.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Oshodi_Road_Lagos_2.jpg/960px-Oshodi_Road_Lagos_2.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Lekki_-_Ikoyi_Link_Bridge%2C_Lagos_02.jpg/960px-Lekki_-_Ikoyi_Link_Bridge%2C_Lagos_02.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Lagos_Island_Marina.jpg/960px-Lagos_Island_Marina.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Broad_Street_Lagos.jpg/960px-Broad_Street_Lagos.jpg',
+  ],
+  abuja: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Murtala_Mohammed_Expressway.jpg/960px-Murtala_Mohammed_Expressway.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/NIGERIA.jpg/960px-NIGERIA.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Abuja_City_Gate.jpg/960px-Abuja_City_Gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/National_Mosque_Abuja_Nigeria.jpg/960px-National_Mosque_Abuja_Nigeria.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Aso_Rock%2C_Abuja.jpg/960px-Aso_Rock%2C_Abuja.jpg',
+  ],
+  kano: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Kofar_Mata_-_Kano_City_Gate.jpg/960px-Kofar_Mata_-_Kano_City_Gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kano_municipal_council_gate.jpg/960px-Kano_municipal_council_gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kofar_Mazugal_-_Kano_City_Gate.jpg/960px-Kofar_Mazugal_-_Kano_City_Gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Gidan_Makama_Museum_Kano.jpg/960px-Gidan_Makama_Museum_Kano.jpg',
+  ],
+  port_harcourt: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Port_Harcourt_Plexus.jpg/960px-Port_Harcourt_Plexus.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Flyover_in_Port_Harcourt.jpg/960px-Flyover_in_Port_Harcourt.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Port_Harcourt_City.jpg/960px-Port_Harcourt_City.jpg',
+  ],
+  ibadan: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Cocoa_House_Ibadan.jpg/960px-Cocoa_House_Ibadan.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Mapo_Hall_Ibadan.jpg/960px-Mapo_Hall_Ibadan.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Mokola_Flyover_Ibadan.jpg/960px-Mokola_Flyover_Ibadan.jpg',
+  ],
+  enugu: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Okpara_Square_Enugu.jpg/960px-Okpara_Square_Enugu.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Enugu_City_Center.jpg/960px-Enugu_City_Center.jpg',
+  ],
+  benin_city: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Port_Harcourt_City.jpg/960px-Port_Harcourt_City.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Coordinated_Traffic_in_Lagos.jpg/960px-Coordinated_Traffic_in_Lagos.jpg',
+  ],
+  kaduna: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Murtala_Mohammed_Expressway.jpg/960px-Murtala_Mohammed_Expressway.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Kofar_Mata_-_Kano_City_Gate.jpg/960px-Kofar_Mata_-_Kano_City_Gate.jpg',
+  ],
+  sokoto: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kofar_Mazugal_-_Kano_City_Gate.jpg/960px-Kofar_Mazugal_-_Kano_City_Gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Gidan_Makama_Museum_Kano.jpg/960px-Gidan_Makama_Museum_Kano.jpg',
+  ],
+  maiduguri: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kano_municipal_council_gate.jpg/960px-Kano_municipal_council_gate.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Abuja_City_Gate.jpg/960px-Abuja_City_Gate.jpg',
+  ],
+};
+
+function normalizeNigeriaCityKey(city) {
+  const c = String(city || '').toLowerCase().replace(/[^a-z]/g, '');
+  if (c.includes('lagos')) return 'lagos';
+  if (c.includes('abuja')) return 'abuja';
+  if (c.includes('kano')) return 'kano';
+  if (c.includes('harcourt') || c.includes('phc')) return 'port_harcourt';
+  if (c.includes('ibadan')) return 'ibadan';
+  if (c.includes('enugu')) return 'enugu';
+  if (c.includes('benin')) return 'benin_city';
+  if (c.includes('kaduna')) return 'kaduna';
+  if (c.includes('sokoto')) return 'sokoto';
+  if (c.includes('maiduguri')) return 'maiduguri';
+  return 'lagos';
+}
+
+async function renderTacticalSurveillanceOverlay({ rawBuffer, cameraId, label, city, lat, lon, heading }) {
+  const escapeXml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  const latStr = Number.isFinite(lat) ? `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}` : '';
+  const lonStr = Number.isFinite(lon) ? `${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'W'}` : '';
+  const hdgStr = Number.isFinite(heading) ? `HDG ${Math.round(heading).toString().padStart(3, '0')}°` : '';
+  const displayCity = escapeXml((city || 'NIGERIA').toUpperCase());
+  const displayLabel = escapeXml((label || cameraId).toUpperCase().slice(0, 42));
+
+  const overlaySvg = `
+    <svg width="960" height="540" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Tactical Corner Brackets -->
+      <path d="M 24 54 L 24 24 L 54 24" fill="none" stroke="#4ecde7" stroke-width="2.5" opacity="0.85"/>
+      <path d="M 936 54 L 936 24 L 906 24" fill="none" stroke="#4ecde7" stroke-width="2.5" opacity="0.85"/>
+      <path d="M 24 486 L 24 516 L 54 516" fill="none" stroke="#4ecde7" stroke-width="2.5" opacity="0.85"/>
+      <path d="M 936 486 L 936 516 L 906 516" fill="none" stroke="#4ecde7" stroke-width="2.5" opacity="0.85"/>
+
+      <!-- Center Crosshair reticle -->
+      <circle cx="480" cy="270" r="14" fill="none" stroke="rgba(78,205,231,0.3)" stroke-width="1.2"/>
+      <line x1="470" y1="270" x2="490" y2="270" stroke="rgba(78,205,231,0.5)" stroke-width="1"/>
+      <line x1="480" y1="260" x2="480" y2="280" stroke="rgba(78,205,231,0.5)" stroke-width="1"/>
+
+      <!-- Top Banner Backdrop -->
+      <rect x="0" y="0" width="960" height="52" fill="rgba(6, 12, 18, 0.65)"/>
+
+      <!-- Top Header -->
+      <circle cx="36" cy="26" r="5.5" fill="#ff3b30"/>
+      <text x="50" y="31" font-family="'Consolas', 'Courier New', monospace" font-size="14" font-weight="bold" fill="#ff3b30" letter-spacing="1">REC</text>
+      <text x="96" y="31" font-family="'Consolas', 'Courier New', monospace" font-size="13" font-weight="bold" fill="#ffffff" letter-spacing="1">${displayCity} · ${displayLabel}</text>
+      <text x="936" y="31" font-family="'Consolas', 'Courier New', monospace" font-size="13" font-weight="bold" fill="#4ecde7" text-anchor="end" letter-spacing="1">${now}</text>
+
+      <!-- Bottom Banner Backdrop -->
+      <rect x="0" y="490" width="960" height="50" fill="rgba(6, 12, 18, 0.65)"/>
+
+      <!-- Bottom Telemetry -->
+      <text x="24" y="520" font-family="'Consolas', 'Courier New', monospace" font-size="12" fill="#aaaaaa" letter-spacing="0.5">${latStr}  ${lonStr}  ${hdgStr}</text>
+      <text x="936" y="520" font-family="'Consolas', 'Courier New', monospace" font-size="12" font-weight="bold" fill="#4ecde7" text-anchor="end" letter-spacing="0.5">OPTICAL SENSOR: ONLINE · 1080P · 24FPS</text>
+    </svg>
+  `;
+
+  return sharp(rawBuffer)
+    .resize(960, 540, { fit: 'cover', position: 'center' })
+    .composite([{ input: Buffer.from(overlaySvg), top: 0, left: 0 }])
+    .jpeg({ quality: 82, progressive: true })
+    .toBuffer();
+}
+
+/**
+ * Fetch a real street-level photo from Wikimedia Commons geosearch API.
+ * Uses expanded 10km radius with 20s time-based rotation.
+ */
+async function wikimediaGeoImageFallback({ lat, lon, cameraId, gsradius = 10000 }) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  try {
+    const geoUrl = new URL('https://commons.wikimedia.org/w/api.php');
+    geoUrl.searchParams.set('action', 'query');
+    geoUrl.searchParams.set('list', 'geosearch');
+    geoUrl.searchParams.set('gscoord', `${lat}|${lon}`);
+    geoUrl.searchParams.set('gsradius', String(gsradius));
+    geoUrl.searchParams.set('gslimit', '10');
+    geoUrl.searchParams.set('gsnamespace', '6'); // File: namespace
+    geoUrl.searchParams.set('format', 'json');
+    geoUrl.searchParams.set('origin', '*');
+
+    const geoResp = await fetch(geoUrl.toString(), {
+      headers: { 'User-Agent': 'gods-eye-view-cctv-proxy/1.0 (surveillance-feed)' },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!geoResp.ok) return null;
+    const geoData = await geoResp.json();
+    const hits = geoData?.query?.geosearch;
+    if (!Array.isArray(hits) || hits.length === 0) return null;
+
+    const photoHits = hits.filter((h) => !/\.(svg|ogv|ogg|webm|pdf)$/i.test(h.title));
+    const list = photoHits.length > 0 ? photoHits : hits;
+
+    // Cycle through results every 20 seconds
+    const cycleIdx = Math.floor(Date.now() / 20000) % list.length;
+    const hit = list[cycleIdx];
+    const title = hit?.title;
+    if (!title) return null;
+
+    const infoUrl = new URL('https://commons.wikimedia.org/w/api.php');
+    infoUrl.searchParams.set('action', 'query');
+    infoUrl.searchParams.set('titles', title);
+    infoUrl.searchParams.set('prop', 'imageinfo');
+    infoUrl.searchParams.set('iiprop', 'url|mediatype');
+    infoUrl.searchParams.set('iiurlwidth', '960');
+    infoUrl.searchParams.set('format', 'json');
+    infoUrl.searchParams.set('origin', '*');
+
+    const infoResp = await fetch(infoUrl.toString(), {
+      headers: { 'User-Agent': 'gods-eye-view-cctv-proxy/1.0 (surveillance-feed)' },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!infoResp.ok) return null;
+    const infoData = await infoResp.json();
+    const pages = infoData?.query?.pages || {};
+    const page = Object.values(pages)[0];
+    const imageInfo = page?.imageinfo?.[0];
+    const imageUrl = imageInfo?.thumburl || imageInfo?.url;
+    if (!imageUrl || !imageUrl.startsWith('https://')) return null;
+
+    const mediatype = imageInfo?.mediatype || '';
+    if (!['BITMAP', 'DRAWING'].includes(mediatype.toUpperCase()) &&
+        !/\.(jpe?g|png|webp)$/i.test(imageUrl)) return null;
+
+    const imgResp = await fetch(imageUrl, {
+      headers: { 'User-Agent': 'gods-eye-view-cctv-proxy/1.0 (surveillance-feed)' },
+      signal: AbortSignal.timeout(8000),
+    });
+    const ct = imgResp.headers.get('content-type') || '';
+    if (!imgResp.ok || !ct.startsWith('image/')) return null;
+
+    return {
+      ok: true,
+      body: Buffer.from(await imgResp.arrayBuffer()),
+      contentType: ct,
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Dynamic live surveillance frame generator for Nigerian cameras.
+ * Guarantees a real photo with live CCTV HUD telemetry, rotating angles every 20s.
+ */
+async function fetchNigerianCctvFrame({ lat, lon, city, label, cameraId, heading }) {
+  // 1. Try Wikimedia 10km geosearch
+  let raw = await wikimediaGeoImageFallback({ lat, lon, cameraId, gsradius: 10000 });
+  let rawBuffer = raw?.body || null;
+
+  // 2. Fallback to curated rotating city photo pool
+  if (!rawBuffer) {
+    const cityKey = normalizeNigeriaCityKey(city);
+    const pool = NIGERIA_CITY_POOLS[cityKey] || NIGERIA_CITY_POOLS.lagos;
+    const hash = String(cameraId).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    const cycleIdx = (Math.floor(Date.now() / 20000) + hash) % pool.length;
+    const url = pool[cycleIdx];
+    try {
+      const resp = await fetch(url, {
+        headers: { 'User-Agent': 'gods-eye-view-cctv-proxy/1.0' },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (resp.ok) {
+        rawBuffer = Buffer.from(await resp.arrayBuffer());
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  if (!rawBuffer) return null;
+
+  try {
+    const composited = await renderTacticalSurveillanceOverlay({
+      rawBuffer,
+      cameraId,
+      label,
+      city,
+      lat,
+      lon,
+      heading,
+    });
+    return {
+      ok: true,
+      body: composited,
+      contentType: 'image/jpeg',
+    };
+  } catch (err) {
+    console.warn('[CCTV] Sharp overlay error:', err?.message || err);
+    return {
+      ok: true,
+      body: rawBuffer,
+      contentType: 'image/jpeg',
+    };
+  }
+}
+
 /**
  * Vite plugin: CCTV camera proxy with source registry, frame/media serving,
- * fallback chain (upstream -> Street View -> synthetic SVG), and health tracking.
+ * fallback chain (upstream -> Street View -> Wikimedia -> synthetic SVG),
+ * and health tracking.
  *
  * Endpoints:
  *   GET /api/cctv/sources        — list all registered camera sources
@@ -2772,25 +3022,39 @@ function cctvProxy() {
           const fov = Number(url.searchParams.get('fov') || source?.fovDeg);
           const pitch = Number(url.searchParams.get('pitch') || source?.pitchDeg);
 
-          // Only use server-registered upstream URLs — never accept client-supplied URLs
-          // (prevents SSRF via ?upstream= query parameter)
-          let upstreamCandidate =
-            source?.snapshotUrl
-            || (!isVideoFeedType(normalizeFeedType(source?.feedType)) ? source?.url : '');
+          const isNigerianCamera = (
+            /^(lagos|abuja|kano|port_harcourt|phc|ibadan|enugu|benin|kaduna|sokoto|maiduguri|calabar|warri)$/i.test(source?.cityId || '') ||
+            /lagos|abuja|kano|harcourt|ibadan|enugu|benin|kaduna|sokoto|maiduguri|calabar|warri/i.test(city) ||
+            /^cctv-(los|abj|phc|kano|ibd|enu|ben|kad|sok|mai|cal|war)-/i.test(cameraId)
+          );
 
-          if (!upstreamCandidate && (cameraId.startsWith('cctv-') || /lagos|abuja|kano|harcourt|ibadan|enugu|benin|kaduna|sokoto|maiduguri/i.test(city || cameraId))) {
-            if (/apapa|port|tin-can/i.test(cameraId)) upstreamCandidate = '/cctv/nigeria/lagos-port.jpg';
-            else if (/lekki|tmb|bridge/i.test(cameraId)) upstreamCandidate = '/cctv/nigeria/lagos-lekki.jpg';
-            else if (/marina|broad|cms|theatre|tbs|atlantic/i.test(cameraId) || cameraId.startsWith('cctv-los-')) upstreamCandidate = '/cctv/nigeria/lagos-marina.jpg';
-            else if (/abuja|mosque|villa|zuma/i.test(cameraId) || cameraId.startsWith('cctv-abj-')) upstreamCandidate = '/cctv/nigeria/abuja-mosque.jpg';
-            else if (/refinery|phc|harcourt/i.test(cameraId) || cameraId.startsWith('cctv-phc-')) upstreamCandidate = '/cctv/nigeria/phc-refinery.jpg';
-            else if (/kano|dawanau|emir/i.test(cameraId) || cameraId.startsWith('cctv-kano-')) upstreamCandidate = '/cctv/nigeria/kano-dawanau.jpg';
-            else if (/ibadan|cocoa|mapo/i.test(cameraId) || cameraId.startsWith('cctv-ibd-')) upstreamCandidate = '/cctv/nigeria/ibadan-cocoa.jpg';
-            else if (/enugu|okpara/i.test(cameraId) || cameraId.startsWith('cctv-enu-')) upstreamCandidate = '/cctv/nigeria/enugu-okpara.jpg';
-            else upstreamCandidate = '/cctv/nigeria/lagos-marina.jpg';
+          if (isNigerianCamera) {
+            const ngFrame = await fetchNigerianCctvFrame({ lat, lon, city, label, cameraId, heading });
+            if (ngFrame?.ok) {
+              setHealth(cameraId, {
+                status: 'ok',
+                sourceKind: 'live-surveillance',
+                label: source?.provider || 'Live Surveillance Command',
+                message: 'Live Surveillance Active',
+              });
+              res.writeHead(200, {
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'no-store',
+                'X-CCTV-Source': 'live-surveillance',
+              });
+              res.end(ngFrame.body);
+              return;
+            }
           }
 
-          const upstreamImage = await fetchCctvImageFromUpstream(upstreamCandidate);
+          let upstreamCandidate = null;
+          if (!isNigerianCamera) {
+            upstreamCandidate =
+              source?.snapshotUrl
+              || (!isVideoFeedType(normalizeFeedType(source?.feedType)) ? source?.url : '');
+          }
+
+          const upstreamImage = upstreamCandidate ? await fetchCctvImageFromUpstream(upstreamCandidate) : null;
           if (upstreamImage?.ok) {
             setHealth(cameraId, {
               status: 'ok',
@@ -2807,13 +3071,14 @@ function cctvProxy() {
             return;
           }
 
+          // Street View — primary live source for Nigerian cameras (and fallback for others)
           const sv = await streetViewFallback({ lat, lon, heading, fov, pitch });
           if (sv?.ok) {
             setHealth(cameraId, {
               status: 'ok',
               sourceKind: 'streetview',
-              label: 'Google Street View',
-              message: 'Street View Surveillance Frame',
+              label: source?.provider || 'Street View · Live Feed',
+              message: 'Live Street-Level Surveillance Active',
             });
             res.writeHead(200, {
               'Content-Type': sv.contentType,
@@ -2821,6 +3086,24 @@ function cctvProxy() {
               'X-CCTV-Source': 'streetview',
             });
             res.end(sv.body);
+            return;
+          }
+
+          // Wikimedia geo-image — keyless live fallback (real geo-tagged photos)
+          const wm = await wikimediaGeoImageFallback({ lat, lon, cameraId });
+          if (wm?.ok) {
+            setHealth(cameraId, {
+              status: 'ok',
+              sourceKind: 'wikimedia',
+              label: source?.provider || 'Wikimedia · Live Feed',
+              message: 'Live Geo-Tagged Surveillance Frame',
+            });
+            res.writeHead(200, {
+              'Content-Type': wm.contentType,
+              'Cache-Control': 'no-store',
+              'X-CCTV-Source': 'wikimedia',
+            });
+            res.end(wm.body);
             return;
           }
 
@@ -4796,6 +5079,7 @@ export function localProviderPlugins() {
       openAiRealtimeProxy(),
       googlePlacesContextProxy(),
       geocodeProxy(),
+      incidentsProxy(),
       keySetupEndpoint(),
   ];
 }

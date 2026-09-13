@@ -928,6 +928,40 @@
   <!-- Intelligence HUD Overlay -->
   <div id="intel-hud"></div>
 
+  <!-- Real-Time Incident Detection Panel -->
+  <aside id="incident-alert-panel" aria-label="Real-time incident alerts" class="collapsed">
+    <div class="incident-panel-scanline" aria-hidden="true"></div>
+    <header class="incident-panel-header">
+      <div class="incident-panel-title-row">
+        <span class="incident-panel-icon">🛡️</span>
+        <span class="incident-panel-title">THREAT MONITOR</span>
+        <span id="incident-count-badge" class="incident-count-badge">0</span>
+        <button id="incident-panel-toggle" type="button" aria-label="Toggle incident panel" title="Toggle incident panel">
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </button>
+      </div>
+      <div class="incident-filter-bar" role="group" aria-label="Filter incidents by type">
+        <button class="incident-filter-btn active" data-incident-filter="all">ALL</button>
+        <button class="incident-filter-btn" data-incident-filter="fire">🔥 FIRE</button>
+        <button class="incident-filter-btn" data-incident-filter="conflict">💥 CONFLICT</button>
+        <button class="incident-filter-btn" data-incident-filter="banditry">⚠️ BANDITRY</button>
+        <button class="incident-filter-btn" data-incident-filter="flood">🌊 FLOOD</button>
+      </div>
+    </header>
+    <div class="incident-panel-body">
+      <div id="incident-feed-list" class="incident-feed-list">
+        <div class="incident-empty">
+          <span>📡</span>
+          <p>Scanning global feeds…</p>
+        </div>
+      </div>
+    </div>
+    <footer class="incident-panel-footer">
+      <span>🛰️ NASA FIRMS · GDELT · ReliefWeb</span>
+      <span class="incident-refresh-tag">LIVE · 5 MIN</span>
+    </footer>
+  </aside>
+
   <!-- Loading screen -->
   <div id="loading-screen">
     <div class="loader-content">

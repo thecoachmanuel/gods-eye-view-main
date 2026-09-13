@@ -7,6 +7,7 @@ import { loadPhotorealisticTileset } from '../mapStartup.js';
 import { initLogoGaze } from '../logoGaze.js';
 import { uninstallRenderGovernor } from '../renderGovernor.js';
 import { describeError } from './errors.js';
+import { initIncidentLayer, destroyIncidentLayer } from '../data/incidentLayer.js';
 
 /** Construct the standalone globe using the caller's local configuration. */
 export async function createStandaloneScene({
@@ -114,5 +115,14 @@ export async function createStandaloneScene({
   });
 
   signal.throwIfAborted();
+
+  // Initialise real-time incident detection layer (non-blocking)
+  try {
+    initIncidentLayer(viewer);
+    defer(() => destroyIncidentLayer());
+  } catch (err) {
+    console.warn('[IncidentLayer] init failed:', err?.message || err);
+  }
+
   return { viewer, tileset, mapStackController };
 }
