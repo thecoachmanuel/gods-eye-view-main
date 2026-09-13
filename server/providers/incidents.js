@@ -18,6 +18,8 @@
  *   GET /api/incidents?country=Nigeria
  */
 
+import { resolveNigeriaLocation, isInsideNigeria } from './nigeria-geo.js';
+
 const INCIDENT_CACHE_MS = 5 * 60 * 1000; // 5 minutes
 
 /** @type {Array<object>} Cached incident list */
@@ -86,8 +88,8 @@ async function loadFirmsIncidents() {
       const conf = String(cols[confIdx] || '').trim().toLowerCase();
       if (conf === 'l' || conf === 'low') continue;
 
-      // Always include all fires in Nigeria / West Africa:
-      const isNigeria = lat >= 4.0 && lat <= 14.0 && lon >= 2.5 && lon <= 15.0;
+      // Always include all fires in Nigeria:
+      const isNigeria = isInsideNigeria(lat, lon);
       // For the rest of the world, filter to higher FRP to keep dataset performant:
       if (!isNigeria && frp < 25.0) continue;
 
@@ -96,17 +98,44 @@ async function loadFirmsIncidents() {
       const detectedAt = date ? `${date}T${time.slice(0, 2)}:${time.slice(2)}:00Z` : new Date().toISOString();
 
       const severity = frp > 100 ? 'critical' : frp > 30 ? 'high' : frp > 10 ? 'medium' : 'low';
+
+      let geo = null;
+      if (isNigeria) {
+        geo = resolveNigeriaLocation(lat, lon);
+      }
+
+      let title = '';
+      if (isNigeria && geo?.city) {
+        title = `🔥 ${geo.city} Fire (${frp.toFixed(1)} MW) · ${geo.stateShort || geo.state}`;
+      } else if (isNigeria) {
+        title = `🔥 Nigeria Active Fire Hotspot (${frp.toFixed(1)} MW)`;
+      } else {
+        title = `Active Wildfire Hotspot (${frp.toFixed(0)} MW)`;
+      }
+
+      const description = isNigeria && geo?.area
+        ? `Satellite thermal detection · FRP: ${frp.toFixed(1)} MW · Area: ${geo.area} · State: ${geo.state} · Confidence: ${conf}`
+        : `Satellite thermal detection · Fire Radiative Power: ${frp.toFixed(1)} MW · Confidence: ${conf}`;
+
       incidents.push({
         id: `firms-${lat.toFixed(4)}-${lon.toFixed(4)}-${date}`,
         type: 'fire',
         severity,
         lat,
         lon,
-        title: isNigeria ? `Nigeria Active Fire Hotspot (${frp.toFixed(1)} MW)` : `Active Wildfire Hotspot (${frp.toFixed(0)} MW)`,
+        title,
         source: 'NASA FIRMS · VIIRS NOAA-20',
         detectedAt,
-        description: `Satellite thermal detection · Fire Radiative Power: ${frp.toFixed(1)} MW · Confidence: ${conf}`,
+        description,
         country: isNigeria ? 'Nigeria' : null,
+        state: isNigeria ? geo?.state : null,
+        stateShort: isNigeria ? geo?.stateShort : null,
+        city: isNigeria ? geo?.city : null,
+        lga: isNigeria ? geo?.lga : null,
+        area: isNigeria ? geo?.area : null,
+        locationFull: isNigeria ? geo?.locationFull : null,
+        frp,
+        confidence: conf,
       });
 
       if (incidents.length >= 1500) break;
@@ -241,6 +270,9 @@ async function loadNewsAlertIncidents() {
       const lat = matchedLoc.lat + jitter();
       const lon = matchedLoc.lon + jitter();
 
+      const isNg = ['Lagos','Abuja','Kano','Port Harcourt','Ibadan','Kaduna','Maiduguri','Benin','Enugu','Jos','Sokoto','Nigeria'].includes(matchedName);
+      const geo = isNg ? resolveNigeriaLocation(lat, lon) : null;
+
       incidents.push({
         id: `news-${Buffer.from(title.slice(0, 30)).toString('base64').replace(/[^a-zA-Z0-9]/g, '')}`,
         type,
@@ -252,9 +284,13 @@ async function loadNewsAlertIncidents() {
         detectedAt: pubDate,
         description,
         url: link || null,
-        country: ['Lagos','Abuja','Kano','Port Harcourt','Ibadan','Kaduna','Maiduguri','Benin','Enugu','Jos','Sokoto','Nigeria'].includes(matchedName)
-          ? 'Nigeria'
-          : matchedName,
+        country: isNg ? 'Nigeria' : matchedName,
+        state: geo?.state || null,
+        stateShort: geo?.stateShort || null,
+        city: geo?.city || (isNg ? matchedName : null),
+        lga: geo?.lga || null,
+        area: geo?.area || null,
+        locationFull: geo?.locationFull || (isNg ? `${matchedName}, Nigeria` : null),
       });
     }
     console.log(`[Incidents] News monitor loaded ${incidents.length} security alerts`);
@@ -312,6 +348,8 @@ async function getIncidents() {
  *     ?lat=&lon=&radius=  filter by km radius from a point
  *     ?types=fire,banditry,flood  comma-separated type filter
  *     ?country=Nigeria  filter by country name (case-insensitive)
+ *     ?region=Nigeria   alias for country=Nigeria
+ *     ?state=Borno      filter by specific Nigerian state
  *
  * @returns {import('vite').Plugin}
  */
@@ -335,6 +373,8 @@ export function incidentsProxy() {
             ? url.searchParams.get('types').toLowerCase().split(',').map((t) => t.trim()).filter(Boolean)
             : null;
           const filterCountry = (url.searchParams.get('country') || '').toLowerCase().trim();
+          const filterRegion = (url.searchParams.get('region') || '').toLowerCase().trim();
+          const filterState = (url.searchParams.get('state') || '').toLowerCase().trim();
 
           let incidents = await getIncidents();
 
@@ -342,9 +382,19 @@ export function incidentsProxy() {
           if (filterTypes?.length) {
             incidents = incidents.filter((inc) => filterTypes.includes(inc.type));
           }
-          if (filterCountry) {
+          if (filterCountry === 'nigeria' || filterCountry === 'ng' || filterRegion === 'nigeria') {
+            incidents = incidents.filter((inc) =>
+              (inc.country || '').toLowerCase() === 'nigeria' || Boolean(inc.state)
+            );
+          } else if (filterCountry) {
             incidents = incidents.filter((inc) =>
               (inc.country || '').toLowerCase().includes(filterCountry)
+            );
+          }
+          if (filterState) {
+            incidents = incidents.filter((inc) =>
+              (inc.state || '').toLowerCase().includes(filterState) ||
+              (inc.stateShort || '').toLowerCase().includes(filterState)
             );
           }
           if (Number.isFinite(filterLat) && Number.isFinite(filterLon) && Number.isFinite(filterRadius)) {

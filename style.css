@@ -872,8 +872,8 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 320px;
-  max-height: 70vh;
+  width: 350px;
+  max-height: 72vh;
   z-index: 520;
   background: rgba(5, 10, 18, 0.92);
   backdrop-filter: blur(20px) saturate(180%);
@@ -895,6 +895,7 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   width: 48px;
 }
 
+#incident-alert-panel.collapsed .incident-scope-bar,
 #incident-alert-panel.collapsed .incident-filter-bar,
 #incident-alert-panel.collapsed .incident-panel-body,
 #incident-alert-panel.collapsed .incident-panel-footer,
@@ -998,6 +999,51 @@ body.cockpit-mode #cockpit-cloud-effects.active {
 #incident-panel-toggle .material-symbols-outlined {
   font-size: 16px;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.incident-scope-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid rgba(78, 205, 231, 0.15);
+}
+
+.incident-scope-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.incident-scope-btn:hover {
+  color: #4ecde7;
+  background: rgba(78, 205, 231, 0.1);
+}
+
+.incident-scope-btn.active {
+  background: rgba(78, 205, 231, 0.2);
+  border-color: rgba(78, 205, 231, 0.5);
+  color: #4ecde7;
+  box-shadow: 0 0 10px rgba(78, 205, 231, 0.2);
+}
+
+.scope-flag {
+  font-size: 12px;
 }
 
 .incident-filter-bar {
@@ -1184,6 +1230,92 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   font-size: 9px;
   color: rgba(78, 205, 231, 0.6);
   margin-top: 2px;
+}
+
+.incident-state-badge {
+  background: rgba(78, 205, 231, 0.15);
+  border: 1px solid rgba(78, 205, 231, 0.4);
+  color: #4ecde7;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.incident-location-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 4px;
+  background: rgba(78, 205, 231, 0.04);
+  border: 1px solid rgba(78, 205, 231, 0.12);
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+
+.incident-location-pin {
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.incident-location-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.35;
+}
+
+.incident-city-tag {
+  color: #4ecde7;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.incident-hierarchy-line {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+}
+
+.incident-tag-state {
+  color: #4ecde7;
+  background: rgba(78, 205, 231, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(78, 205, 231, 0.2);
+}
+
+.incident-tag-lga {
+  color: #ff9500;
+  background: rgba(255, 149, 0, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 149, 0, 0.2);
+}
+
+.incident-coords-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
+}
+
+.incident-frp-tag {
+  color: #ff3b30;
+  font-weight: 700;
+  background: rgba(255, 59, 48, 0.12);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  padding: 1px 5px;
+  border-radius: 3px;
 }
 
 .incident-panel-footer {
